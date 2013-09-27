@@ -114,6 +114,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     public function providerGetArguments() {
         return array(
             array(array(), 'pallo\\library\\reflection\\ObjectFactory', '__construct'),
+            array(array(), 'pallo\\library\\reflection\\TestObject', '__construct'),
         	array(array(), new Callback(array('pallo\\library\\reflection\\ObjectFactory', '__construct')), null),
             array(array('class' => null, 'neededClass' => null, 'arguments' => null), 'pallo\\library\\reflection\\ObjectFactory', 'createObject'),
             array(array('expected' => null, 'class' => null, 'method' => null), $this, 'testGetArguments'),
@@ -125,15 +126,20 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
      * @dataProvider providerGetArgumentsThrowsExceptionWhenInvalidClassProvided
      * @expectedException pallo\library\reflection\exception\ReflectionException
      */
-    public function testGetArgumentsThrowsExceptionWhenInvalidClassProvided($class) {
-		$this->helper->getArguments($class);
+    public function testGetArgumentsThrowsExceptionWhenInvalidArgumentProvided($class, $method) {
+		$this->helper->getArguments($class, $method);
     }
 
     public function providerGetArgumentsThrowsExceptionWhenInvalidClassProvided() {
         return array(
-            array(array()),
-            array(null),
+            array(array(), null),
+            array(null, null),
+            array('pallo\\library\\reflection\\TestObject', 'unexistantMethod'),
         );
     }
+
+}
+
+class TestObject {
 
 }

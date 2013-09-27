@@ -96,6 +96,8 @@ class ObjectFactory {
         $constructor = $reflectionClass->getConstructor();
         if (!$constructor && $arguments) {
         	throw new ReflectionException('Could not create ' . $class . ': constructor parameters provided while there is no constructor');
+        } elseif (!$constructor) {
+            return $reflectionClass->newInstance();
         }
 
         $constructorArguments = $constructor->getParameters();

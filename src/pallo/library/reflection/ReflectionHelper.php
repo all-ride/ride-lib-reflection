@@ -100,8 +100,17 @@ class ReflectionHelper {
 	            $arguments = $reflectionFunction->getParameters();
 	        } else {
 	            $reflectionClass = new ReflectionClass($class);
-	            $reflectionMethod = $reflectionClass->getMethod($method);
-	            $arguments = $reflectionMethod->getParameters();
+
+	            try {
+	            	$reflectionMethod = $reflectionClass->getMethod($method);
+		            $arguments = $reflectionMethod->getParameters();
+	            } catch (\ReflectionException $exception) {
+	            	if ($method == '__construct') {
+	            		$arguments = array();
+	            	} else {
+	            		throw $exception;
+	            	}
+	            }
 	        }
     	} catch (Exception $exception) {
     		throw new ReflectionException('Could not get the arguments', null, $exception);

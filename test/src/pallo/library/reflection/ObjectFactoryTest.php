@@ -46,6 +46,11 @@ class ObjectFactoryTest extends PHPUnit_Framework_TestCase {
         $exception = $this->factory->createObject('pallo\\library\\reflection\\TestReflectionHelper');
 
         $this->assertNotNull($exception, 'Result is null');
+
+        // test no constructor
+        $exception = $this->factory->createObject('pallo\\library\\reflection\\TestReflectionHelper2');
+
+        $this->assertNotNull($exception, 'Result is null');
     }
 
     /**
@@ -141,5 +146,9 @@ class TestReflectionHelper extends ReflectionHelper {
 	public function __construct($dummy = null) {
 
 	}
+
+}
+
+class TestReflectionHelper2 extends ReflectionHelper {
 
 }
