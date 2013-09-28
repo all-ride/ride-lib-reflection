@@ -31,7 +31,7 @@ class CallbackTest extends PHPUnit_Framework_TestCase {
      * @expectedException pallo\library\reflection\exception\ReflectionException
      */
     public function testConstructThrowsExceptionWhenInvalidCallbackPassed($callback) {
-		new Callback($callback);
+        new Callback($callback);
     }
 
     public function providerConstructThrowsExceptionWhenInvalidCallbackPassed() {
@@ -81,7 +81,7 @@ class CallbackTest extends PHPUnit_Framework_TestCase {
      */
     public function testInvokeThrowsExceptionWhenUnableToInvokeCallback($callback) {
         $callback = new Callback($callback);
-		$callback->invoke();
+        $callback->invoke();
     }
 
     public function providerInvokeThrowsExceptionWhenUnableToInvokeCallback() {

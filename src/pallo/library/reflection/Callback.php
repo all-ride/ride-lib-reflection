@@ -143,7 +143,7 @@ class Callback {
     public function invoke() {
         $arguments = func_get_args();
 
-        return $this->invokeWithArrayArguments($arguments);
+        return $this->invokeWithArguments($arguments);
     }
 
     /**
@@ -153,7 +153,7 @@ class Callback {
      * @throws pallo\library\reflection\exception\ReflectionException when the
      * callback is not callable
      */
-    public function invokeWithArrayArguments(array $arguments) {
+    public function invokeWithArguments(array $arguments) {
         if (!$this->isCallable()) {
             throw new ReflectionException('Could not invoke ' . $this . ': callback is not callable');
         }
