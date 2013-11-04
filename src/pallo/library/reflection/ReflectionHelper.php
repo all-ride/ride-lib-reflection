@@ -109,12 +109,12 @@ class ReflectionHelper implements Invoker {
         // gather the constructor parameters
         $arguments = $this->getArguments('__construct', $class);
         foreach ($arguments as $name => $argument) {
-            if (isset($properties[$name])) {
+            if (isset($properties[$name]) || array_key_exists($name, $properties) !== false) {
                 $arguments[$name] = $properties[$name];
 
                 unset($properties[$name]);
             } elseif (!$argument->isOptional()) {
-                throw new ReflectionException('Could not ' . $class . ': mandatory construct parameter ' . $name . ' is not set in the provided properties');
+                throw new ReflectionException('Could not create ' . $class . ': mandatory construct parameter ' . $name . ' is not set in the provided properties');
             } else {
                 $arguments[$name] = $argument->getDefaultValue();
             }
