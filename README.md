@@ -1,6 +1,6 @@
-# Pallo: Reflection Library
+# Ride: Reflection Library
 
-Reflection helper library of the PHP Pallo framework.
+Reflection helper library of the PHP Ride framework.
 
 ## Invoker
 
@@ -21,7 +21,7 @@ Check the following code sample:
 
     <?php
     
-    use pallo\library\reflection\ReflectionHelper;
+    use ride\library\reflection\ReflectionHelper;
     
     $reflectionHelper = new ReflectionHelper();
 
@@ -29,7 +29,7 @@ Check the following code sample:
     $date = $reflectionHelper->createObject('DateTime', array('time' => '6 July 1983'));
     
     // create an object for a specific interface
-    $decorator = $reflectionHelper->createObject('pallo\\library\\reflection\\ReflectionHelper', null, 'pallo\\library\\reflection\\Invoker);
+    $decorator = $reflectionHelper->createObject('ride\\library\\reflection\\ReflectionHelper', null, 'ride\\library\\reflection\\Invoker);
 
     // get and set properties
     $data = array();
@@ -62,8 +62,8 @@ Check the following code sample:
 
     // retrieve callback arguments
     $arguments = $reflectionHelper->getArguments('strpos');
-    $arguments = $reflectionHelper->getArguments('safeString', 'pallo\library\String');
-    $arguments = $reflectionHelper->getArguments('safeString', new pallo\library\String());
+    $arguments = $reflectionHelper->getArguments('safeString', 'ride\library\String');
+    $arguments = $reflectionHelper->getArguments('safeString', new ride\library\String());
     $arguments = $reflectionHelper->getArguments(array($data, 'safeString');
     // $arguments = array(
     //     'replacement' => ReflectionParamter[...],     
