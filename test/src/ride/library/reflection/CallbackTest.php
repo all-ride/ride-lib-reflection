@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\library\reflection;
+namespace ride\library\reflection;
 
 use \PHPUnit_Framework_TestCase;
 
@@ -20,15 +20,15 @@ class CallbackTest extends PHPUnit_Framework_TestCase {
     public function providerConstruct() {
         return array(
             array('str_replace', 'str_replace'),
-            array('pallo\\library\\Url::getBaseUrl', array('pallo\\library\\Url', 'getBaseUrl')),
-            array('pallo\\library\\reflection\\CallbackTest->testConstruct', array($this, 'testConstruct')),
-            array('pallo\\library\\reflection\\CallbackTest->testConstruct', new Callback(array($this, 'testConstruct'))),
+            array('ride\\library\\Url::getBaseUrl', array('ride\\library\\Url', 'getBaseUrl')),
+            array('ride\\library\\reflection\\CallbackTest->testConstruct', array($this, 'testConstruct')),
+            array('ride\\library\\reflection\\CallbackTest->testConstruct', new Callback(array($this, 'testConstruct'))),
         );
     }
 
     /**
      * @dataProvider providerConstructThrowsExceptionWhenInvalidCallbackPassed
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testConstructThrowsExceptionWhenInvalidCallbackPassed($callback) {
         new Callback($callback);
@@ -77,7 +77,7 @@ class CallbackTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerInvokeThrowsExceptionWhenUnableToInvokeCallback
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testInvokeThrowsExceptionWhenUnableToInvokeCallback($callback) {
         $callback = new Callback($callback);

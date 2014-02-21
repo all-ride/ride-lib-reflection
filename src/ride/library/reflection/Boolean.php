@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\library\reflection;
+namespace ride\library\reflection;
 
 use \InvalidArgumentException;
 

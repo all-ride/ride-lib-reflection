@@ -1,6 +1,6 @@
 {
-    "name": "pallo/lib-reflection",
-    "description": "Reflection helper library of the Pallo framework",
+    "name": "ride/lib-reflection",
+    "description": "Reflection helper library of the Ride framework",
     "license": "MIT",
     "version": "0.4.1",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-0": {
-            "pallo\\library\\reflection\\": ["src/", "test/src/"]
+            "ride\\library\\reflection\\": ["src/", "test/src/"]
         }
     }
 }
