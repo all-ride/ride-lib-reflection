@@ -1,8 +1,8 @@
 <?php
 
-namespace pallo\library\reflection;
+namespace ride\library\reflection;
 
-use pallo\library\reflection\exception\ReflectionException;
+use ride\library\reflection\exception\ReflectionException;
 
 /**
  * Callback object for dynamic method invokation
@@ -60,7 +60,7 @@ class Callback {
      * instance and as a second argument the method name. Another instance of
      * Callback is also possible.
      * @return null
-     * @throws pallo\library\reflection\exception\ReflectionException when an
+     * @throws ride\library\reflection\exception\ReflectionException when an
      * invalid callback has been provided
      */
     public function setCallback($callback) {
@@ -150,7 +150,7 @@ class Callback {
      * Invokes the callback with an array of arguments
      * @param array $arguments Arguments for the callback
      * @return mixed Result of the callback
-     * @throws pallo\library\reflection\exception\ReflectionException when the
+     * @throws ride\library\reflection\exception\ReflectionException when the
      * callback is not callable
      */
     public function invokeWithArguments(array $arguments) {

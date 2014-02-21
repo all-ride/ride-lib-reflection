@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\library\reflection\exception;
+namespace ride\library\reflection\exception;
 
 /**
  * Exception thrown by the reflection library

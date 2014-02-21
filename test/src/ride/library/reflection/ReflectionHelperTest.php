@@ -1,6 +1,6 @@
 <?php
 
-namespace pallo\library\reflection;
+namespace ride\library\reflection;
 
 use \PHPUnit_Framework_TestCase;
 
@@ -18,95 +18,95 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testCreateObject() {
-        $object = $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper');
+        $object = $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper');
 
         $this->assertNotNull($object, 'Result is null');
         $this->assertTrue($object instanceof ReflectionHelper, 'Result is not an instance of the requested class');
 
         // constructor without arguments
-        $object = $this->helper->createObject('pallo\\library\\reflection\\TestReflectionHelper3');
+        $object = $this->helper->createObject('ride\\library\\reflection\\TestReflectionHelper3');
 
         $this->assertNotNull($object, 'Result is null');
         $this->assertTrue($object instanceof TestReflectionHelper3, 'Result is not an instance of the requested class');
 
         // test arguments
-        $callback = $this->helper->createObject('pallo\\library\\reflection\\Callback', array('callback' => 'strlen'));
+        $callback = $this->helper->createObject('ride\\library\\reflection\\Callback', array('callback' => 'strlen'));
 
         $this->assertNotNull($callback, 'Result is null');
         $this->assertTrue($callback instanceof Callback, 'Result is not an instance of the requested class');
 
         // test default arguments
-        $exception = $this->helper->createObject('pallo\\library\\reflection\\TestReflectionHelper');
+        $exception = $this->helper->createObject('ride\\library\\reflection\\TestReflectionHelper');
 
         $this->assertNotNull($exception, 'Result is null');
 
         // test no constructor
-        $exception = $this->helper->createObject('pallo\\library\\reflection\\TestReflectionHelper2');
+        $exception = $this->helper->createObject('ride\\library\\reflection\\TestReflectionHelper2');
 
         $this->assertNotNull($exception, 'Result is null');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionOnInvalidClass() {
         $this->helper->createObject($this);
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionWhenProvidedClassDoesNotExtendsNeededClass() {
-        $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper', null, 'pallo\\library\\Autoloader');
+        $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper', null, 'ride\\library\\Autoloader');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionWhenProvidedClassDoesNotImplementNeededClass() {
-        $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper', null, '\Iterator');
+        $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper', null, '\Iterator');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionOnNonExistingClass() {
         $this->helper->createObject('nonExistingClass');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionOnNonExistingNeededClass() {
-        $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper', null, 'nonExistingClass');
+        $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper', null, 'nonExistingClass');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionOnInvalidNeededClass() {
-        $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper', null, $this);
+        $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper', null, $this);
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionWhenRequiredConstructorParametersNotProvided() {
-        $this->helper->createObject('pallo\\library\\reflection\\Callback');
+        $this->helper->createObject('ride\\library\\reflection\\Callback');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionWhenConstructorParametersProvidedButConstructorDoesNotExist() {
-        $this->helper->createObject('pallo\\library\\reflection\\ReflectionHelper', array('test' => 'test'));
+        $this->helper->createObject('ride\\library\\reflection\\ReflectionHelper', array('test' => 'test'));
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateObjectThrowsExceptionWhenInvalidConstructorParametersProvided() {
-        $this->helper->createObject('pallo\\library\\reflection\\Callback', array('callback' => 'str_replace', 'dummy' => null));
+        $this->helper->createObject('ride\\library\\reflection\\Callback', array('callback' => 'str_replace', 'dummy' => null));
     }
 
     public function testCreateData() {
@@ -117,7 +117,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
         	'value' => $value,
         );
 
-        $instance = $this->helper->createData('pallo\\library\\reflection\\TestReflectionHelper', $arguments);
+        $instance = $this->helper->createData('ride\\library\\reflection\\TestReflectionHelper', $arguments);
 
         $this->assertTrue($instance instanceof TestReflectionHelper);
         $this->assertNull($instance->dummy);
@@ -125,27 +125,27 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
         $arguments['dummy'] = $dummy;
 
-        $instance = $this->helper->createData('pallo\\library\\reflection\\TestReflectionHelper', $arguments);
+        $instance = $this->helper->createData('ride\\library\\reflection\\TestReflectionHelper', $arguments);
 
         $this->assertTrue($instance instanceof TestReflectionHelper);
         $this->assertEquals($dummy, $instance->dummy);
         $this->assertEquals($value, $instance->value);
 
-        $instance = $this->helper->createData('pallo\\library\\reflection\\TestReflectionHelper2', array());
+        $instance = $this->helper->createData('ride\\library\\reflection\\TestReflectionHelper2', array());
 
         $this->assertTrue($instance instanceof TestReflectionHelper2);
 
-        $callback = $this->helper->createData('pallo\\library\\reflection\\Callback', array('callback' => array('pallo\\library\\reflection\\ReflectionHelper', '__construct')));
+        $callback = $this->helper->createData('ride\\library\\reflection\\Callback', array('callback' => array('ride\\library\\reflection\\ReflectionHelper', '__construct')));
 
         $this->assertTrue($callback instanceof Callback);
-        $this->assertEquals($callback->__toString(), 'pallo\\library\\reflection\\ReflectionHelper::__construct');
+        $this->assertEquals($callback->__toString(), 'ride\\library\\reflection\\ReflectionHelper::__construct');
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testCreateDataThrowsExceptionWhenRequiredConstructorArgumentsNotProvided() {
-        $this->helper->createData('pallo\\library\\reflection\\Callback', array());
+        $this->helper->createData('ride\\library\\reflection\\Callback', array());
     }
 
     public function testGetProperty() {
@@ -188,7 +188,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerGetPropertyThrowsExceptionWhenInvalidNameProvided
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testGetPropertyThrowsExceptionWhenInvalidNameProvided($name) {
         $data = array('test' => 'value');
@@ -238,7 +238,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerGetPropertyThrowsExceptionWhenInvalidNameProvided
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testSetPropertyThrowsExceptionWhenInvalidNameProvided($name) {
         $data = array('test' => 'value');
@@ -282,12 +282,12 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
     public function providerGetArguments() {
         return array(
-            array(array('callback' => true), '__construct', 'pallo\\library\\reflection\\Callback', '__construct'),
-            array(array(), '__construct', 'pallo\\library\\reflection\\TestObject'),
-            array(array(), null, 'pallo\\library\\reflection\\TestObject'),
-            array(array('callback' => true), array('pallo\\library\\reflection\\Callback', '__construct'), null),
-            array(array('callback' => true), new Callback(array('pallo\\library\\reflection\\Callback', '__construct')), null),
-            array(array('class' => null, 'arguments' => null, 'neededInterface' => null), 'createObject', 'pallo\\library\\reflection\\ReflectionHelper'),
+            array(array('callback' => true), '__construct', 'ride\\library\\reflection\\Callback', '__construct'),
+            array(array(), '__construct', 'ride\\library\\reflection\\TestObject'),
+            array(array(), null, 'ride\\library\\reflection\\TestObject'),
+            array(array('callback' => true), array('ride\\library\\reflection\\Callback', '__construct'), null),
+            array(array('callback' => true), new Callback(array('ride\\library\\reflection\\Callback', '__construct')), null),
+            array(array('class' => null, 'arguments' => null, 'neededInterface' => null), 'createObject', 'ride\\library\\reflection\\ReflectionHelper'),
             array(array('expected' => null, 'callback' => null, 'class' => null), 'testGetArguments', $this),
             array(array('str' => null), 'strlen', null),
         );
@@ -295,7 +295,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @dataProvider providerGetArgumentsThrowsExceptionWhenInvalidCallbackProvided
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testGetArgumentsThrowsExceptionWhenInvalidCallbackProvided($callback, $class) {
         $this->helper->getArguments($callback, $class);
@@ -307,7 +307,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
             array(null, null),
             array('unexistantMethod', null),
             array('unexistantMethod', $this),
-            array('unexistantMethod', 'pallo\\library\\reflection\\TestObject'),
+            array('unexistantMethod', 'ride\\library\\reflection\\TestObject'),
         );
     }
 
@@ -334,7 +334,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testInvokeThrowsExceptionWhenArgumentProvidedWhichAreNotInMethodSignature() {
         $arguments = array(
@@ -347,7 +347,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testInvokeThrowsExceptionWhenArgumentsProvidedWhichAreNotInMethodSignature() {
         $arguments = array(
@@ -380,14 +380,14 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testInvokeThrowsExceptionWhenCallbackNotCallable() {
         $this->helper->invoke(array($this, 'unexistantMethod'));
     }
 
     /**
-     * @expectedException pallo\library\reflection\exception\ReflectionException
+     * @expectedException ride\library\reflection\exception\ReflectionException
      */
     public function testInvokeThrowsExceptionWhenRequiredArgumentNotProvided() {
         $this->helper->invoke(array($this, 'method'));
