@@ -60,7 +60,7 @@ class Callback {
      * instance and as a second argument the method name. Another instance of
      * Callback is also possible.
      * @return null
-     * @throws ride\library\reflection\exception\ReflectionException when an
+     * @throws \ride\library\reflection\exception\ReflectionException when an
      * invalid callback has been provided
      */
     public function setCallback($callback) {
@@ -150,7 +150,7 @@ class Callback {
      * Invokes the callback with an array of arguments
      * @param array $arguments Arguments for the callback
      * @return mixed Result of the callback
-     * @throws ride\library\reflection\exception\ReflectionException when the
+     * @throws \ride\library\reflection\exception\ReflectionException when the
      * callback is not callable
      */
     public function invokeWithArguments(array $arguments) {
