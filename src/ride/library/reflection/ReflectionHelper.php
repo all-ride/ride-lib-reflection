@@ -166,7 +166,7 @@ class ReflectionHelper implements Invoker {
      * @param string $name Name of the property, can be something like name[sub]
      * @param mixed $default Default value when the property is not set
      * @return mixed
-     * @throws ride\library\reflection\exception\ReflectionException
+     * @throws \ride\library\reflection\exception\ReflectionException
      */
     protected function getArrayProperty(array &$data, $name, $default = null) {
         $positionOpen = strpos($name, '[');
@@ -307,7 +307,7 @@ class ReflectionHelper implements Invoker {
 
     /**
      * Gets the possible arguments for a function/method call
-     * @param string|array|ride\library\reflection\Callback $callback Name of
+     * @param string|array| \ride\library\reflection\Callback $callback Name of
      * the function or method in the class or a callback
      * @param mixed $class Class name for a static function, an instance for a
      * method call and null for a function call.
@@ -348,7 +348,7 @@ class ReflectionHelper implements Invoker {
                 }
             }
         } catch (Exception $exception) {
-            throw new ReflectionException('Could not get the arguments in ' . ($class ? get_class($class) : ''), null, $exception);
+            throw new ReflectionException('Could not get the arguments for method ' . $method . ($class ? ' in ' . (!is_string($class) ? get_class($class) : $class) : ''), null, $exception);
         }
 
         foreach ($arguments as $index => $argument) {
