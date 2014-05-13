@@ -151,6 +151,8 @@ class ReflectionHelper implements Invoker {
         $methodName = 'get' . ucfirst($name);
         if (method_exists($data, $methodName)) {
             return $data->$methodName();
+        } elseif (strncmp($name, 'is', 2) === 0 && method_exists($data, $name)) {
+            return $data->$name();
         }
 
         if (isset($data->$name)) {
