@@ -342,7 +342,7 @@ class ReflectionHelper implements Invoker {
                     $reflectionMethod = $reflectionClass->getMethod($method);
                     $arguments = $reflectionMethod->getParameters();
                 } catch (\ReflectionException $exception) {
-                    if ($method == '__construct') {
+                    if ($method == '__construct' || $reflectionClass->hasMethod('__call')) {
                         $arguments = array();
                     } else {
                         throw $exception;
