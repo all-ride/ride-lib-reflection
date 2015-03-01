@@ -14,6 +14,33 @@ use \ReflectionFunction;
 class ReflectionHelper implements Invoker {
 
     /**
+     * Checks if the provided class extends or implements the provided interface
+     * @param mixed $class Class name, instance or a reflection class to test
+     * @param string $neededInterface Class name of the needed interface
+     * @return boolean True when the class is valid
+     * @throws \ride\library\reflection\exception\ReflectionException when the
+     * class does not implement or extend the needed interface or when one of
+     * the classes does not exist
+     */
+    public function implementsOrExtends($class, $neededInterface) {
+        try {
+            if ($class instanceof ReflectionClass) {
+                $reflectionClass = $class;
+            } elseif (is_string($class)) {
+                $reflectionClass = new ReflectionClass($class);
+            } elseif (is_object($class)) {
+                $reflectionClass = new ReflectionClass(get_class($class));
+            } else {
+                throw new ReflectionException('Invalid class provided');
+            }
+        } catch (Exception $exception) {
+            throw new ReflectionException('Could not check class hierarchy: invalid class provided', 0, $exception);
+        }
+
+        return $this->checkImplementsOrExtends($reflectionClass, $neededInterface);
+    }
+
+    /**
      * Creates an instance of the provided class
      * @param string $class Full name of the class
      * @param array|null $arguments Named arguments for the constructor
@@ -39,21 +66,11 @@ class ReflectionHelper implements Invoker {
         }
 
         // validate class inheritance with the needed class
-        if ($neededInterface && $class != $neededInterface) {
-            if (!is_string($neededInterface)) {
-                throw new ReflectionException('Could not create object: provided needed class is empty or not a string');
-            }
-
+        if ($neededInterface) {
             try {
-                $neededReflectionClass = new ReflectionClass($neededInterface);
-            } catch (Exception $e) {
-                throw new ReflectionException('Could not create object: needed class ' . $neededInterface . ' not found', 0, $e);
-            }
-
-            if ($neededReflectionClass->isInterface() && !$reflectionClass->implementsInterface($neededInterface)) {
-                throw new ReflectionException('Could not create object: ' . $class . ' does not implement ' . $neededInterface);
-            } elseif (!$reflectionClass->isSubclassOf($neededInterface)) {
-                throw new ReflectionException('Could not create object: ' . $class . ' does not extend ' . $neededInterface);
+                $this->checkImplementsOrExtends($reflectionClass, $neededInterface);
+            } catch (Exception $exception) {
+                throw new ReflectionException('Could not create object: ' . $class . ' does not have the right inheritance', 0, $exception);
             }
         }
 
@@ -94,6 +111,40 @@ class ReflectionHelper implements Invoker {
 
         // create and return object instance with constructor parameters
         return $reflectionClass->newInstanceArgs($constructorArguments);
+    }
+
+    /**
+     * Checks if the provided class extends or implements the provided interface
+     * @param ReflectionClass $reflectionClass Instance of a reflection class
+     * @param string $neededInterface Class name of the needed interface
+     * @return boolean True when the class is valid
+     * @throws \ride\library\reflection\exception\ReflectionException when the
+     * class does not implement or extend the needed interface or when one of
+     * the classes does not exist
+     */
+    protected function checkImplementsOrExtends(ReflectionClass $reflectionClass, $neededInterface) {
+        $class = $reflectionClass->getName();
+        if ($class === $neededInterface) {
+            return true;
+        }
+
+        if (!is_string($neededInterface)) {
+            throw new ReflectionException('Could not check class hierarchy: provided needed interface is empty or not a string');
+        }
+
+        try {
+            $neededReflectionClass = new ReflectionClass($neededInterface);
+        } catch (Exception $exception) {
+            throw new ReflectionException('Could not check class hierarchy: needed interface ' . $neededInterface . ' not found', 0, $exception);
+        }
+
+        if ($neededReflectionClass->isInterface() && !$reflectionClass->implementsInterface($neededInterface)) {
+            throw new ReflectionException($class . ' does not implement ' . $neededInterface);
+        } elseif (!$reflectionClass->isSubclassOf($neededInterface)) {
+            throw new ReflectionException($class . ' does not extend ' . $neededInterface);
+        }
+
+        return true;
     }
 
     /**
