@@ -13,6 +13,8 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
 
     public $sme = 7;
 
+    private $pla = 5;
+
     protected function setUp() {
         $this->helper = new ReflectionHelper();
     }
@@ -149,14 +151,22 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     }
 
     public function testGetProperty() {
+        // with getter
         $result = $this->helper->getProperty($this, 'helper');
 
         $this->assertTrue($result === $this->helper);
 
+        // public variable
         $result = $this->helper->getProperty($this, 'sme');
 
         $this->assertTrue($result === 7);
 
+        // with reflection
+        $result = $this->helper->getProperty($this, 'pla', null, true);
+
+        $this->assertTrue($result === 5);
+
+        // array
         $data = array(
             'sme' => $this->sme,
             'sub' => array(
@@ -209,6 +219,7 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
         $property = 'value';
         $value = 7;
 
+        // without reflection
         $this->assertFalse(isset($this->$property));
 
         $this->helper->setProperty($this, $property, $value);
@@ -219,6 +230,23 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
         unset($this->$property);
 
         $this->assertFalse(isset($this->$property));
+
+        // with reflection
+        $property = 'pla';
+        $value = 5;
+
+        $this->assertTrue($this->$property === $value);
+
+        $value++;
+
+        $this->helper->setProperty($this, $property, $value, true);
+
+        $this->assertTrue(isset($this->$property));
+        $this->assertTrue($this->$property === $value);
+
+
+        // with setter
+        $property = 'value';
 
         $this->helper->setProperty($this, 'dummy', $value);
 
