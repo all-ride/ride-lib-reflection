@@ -7,11 +7,24 @@ use ride\library\reflection\exception\ReflectionException;
 use \Exception;
 use \ReflectionClass;
 use \ReflectionFunction;
+use \ReflectionProperty;
 
 /**
  * Helper for PHP's reflection
  */
 class ReflectionHelper implements Invoker {
+
+    /**
+     * Loaded reflection classes
+     * @var array
+     */
+    private $classes = array();
+
+    /**
+     * Loaded reflection properties
+     * @var array
+     */
+    private $properties = array();
 
     /**
      * Checks if the provided class extends or implements the provided interface
@@ -27,9 +40,9 @@ class ReflectionHelper implements Invoker {
             if ($class instanceof ReflectionClass) {
                 $reflectionClass = $class;
             } elseif (is_string($class)) {
-                $reflectionClass = new ReflectionClass($class);
+                $reflectionClass = $this->getReflectionClass($class);
             } elseif (is_object($class)) {
-                $reflectionClass = new ReflectionClass(get_class($class));
+                $reflectionClass = $this->getReflectionClass(get_class($class));
             } else {
                 throw new ReflectionException('Invalid class provided');
             }
@@ -60,9 +73,9 @@ class ReflectionHelper implements Invoker {
         }
 
         try {
-            $reflectionClass = new ReflectionClass($class);
-        } catch (Exception $e) {
-            throw new ReflectionException('Could not create object: class ' . $class . ' not found', 0, $e);
+            $reflectionClass = $this->getReflectionClass($class);
+        } catch (Exception $exception) {
+            throw new ReflectionException('Could not create object: class ' . $class . ' not found', 0, $exception);
         }
 
         // validate class inheritance with the needed class
@@ -79,12 +92,13 @@ class ReflectionHelper implements Invoker {
         if (!$constructor && $arguments) {
             throw new ReflectionException('Could not create ' . $class . ': constructor parameters provided while there is no constructor');
         } elseif (!$constructor) {
+            // no constructor, create and return the object instance
             return $reflectionClass->newInstance();
         }
 
         $constructorArguments = $constructor->getParameters();
         if (!$constructorArguments && !$arguments) {
-            // no parameters, create and return the object instance
+            // no arguments, create and return the object instance
             return $reflectionClass->newInstance();
         }
 
@@ -133,7 +147,7 @@ class ReflectionHelper implements Invoker {
         }
 
         try {
-            $neededReflectionClass = new ReflectionClass($neededInterface);
+            $neededReflectionClass = $this->getReflectionClass($neededInterface);
         } catch (Exception $exception) {
             throw new ReflectionException('Could not check class hierarchy: needed interface ' . $neededInterface . ' not found', 0, $exception);
         }
@@ -151,12 +165,13 @@ class ReflectionHelper implements Invoker {
      * Creates a data instance
      * @param string $class Full name of the data class
      * @param array $values Values for the data
+     * @param boolean $useReflection Set to true to skip setters
      * @return mixed Instance of the data object
      * @throws Exception when the data class could not be created
      * @throws Exception when a mandatory constructor parameter is missing in
      * the provided properties
      */
-    public function createData($class, array $properties) {
+    public function createData($class, array $properties, $useReflection = false) {
         // gather the constructor parameters
         $arguments = $this->getArguments('__construct', $class);
         foreach ($arguments as $name => $argument) {
@@ -176,7 +191,7 @@ class ReflectionHelper implements Invoker {
 
         // set the remaining properties
         foreach ($properties as $name => $value) {
-            $this->setProperty($data, $name, $value);
+            $this->setProperty($data, $name, $value, $useReflection);
         }
 
         return $data;
@@ -188,9 +203,10 @@ class ReflectionHelper implements Invoker {
      * @param string $name Name of the property
      * @param mixed $default Default value to be returned when the property
      * is not set
+     * @param boolean $useReflection Set to true to skip getter
      * @return mixed Value of the property if found, null otherwise
      */
-    public function getProperty(&$data, $name, $default = null) {
+    public function getProperty(&$data, $name, $default = null, $useReflection = false) {
         if (!is_string($name) || $name == '') {
             throw new ReflectionException('Could obtain property: invalid name provided');
         }
@@ -199,15 +215,25 @@ class ReflectionHelper implements Invoker {
             return $this->getArrayProperty($data, $name, $default);
         }
 
-        $methodName = 'get' . ucfirst($name);
-        if (method_exists($data, $methodName)) {
-            return $data->$methodName();
-        } elseif (strncmp($name, 'is', 2) === 0 && method_exists($data, $name)) {
-            return $data->$name();
-        }
+        if ($useReflection) {
+            try {
+                $property = $this->getReflectionProperty($data, $name);
 
-        if (isset($data->$name)) {
-            return $data->$name;
+                return $property->getValue($data);
+            } catch (Exception $exception) {
+
+            }
+        } else {
+            $methodName = 'get' . ucfirst($name);
+            if (method_exists($data, $methodName)) {
+                return $data->$methodName();
+            } elseif (strncmp($name, 'is', 2) === 0 && method_exists($data, $name)) {
+                return $data->$name();
+            }
+
+            if (isset($data->$name)) {
+                return $data->$name;
+            }
         }
 
         return $default;
@@ -266,9 +292,10 @@ class ReflectionHelper implements Invoker {
      * @param array|object $data Data container
      * @param string $name Name of the property
      * @param mixed $value Value for the property
+     * @param boolean $useReflection Set to true to skip setter
      * @return null
      */
-    public function setProperty(&$data, $name, $value) {
+    public function setProperty(&$data, $name, $value, $useReflection = false) {
         if (!is_string($name) || $name == '') {
             throw new ReflectionException('Could obtain property: invalid name provided');
         }
@@ -277,19 +304,28 @@ class ReflectionHelper implements Invoker {
             return $this->setArrayProperty($data, $name, $value);
         }
 
-        $methodName = 'set' . ucfirst($name);
-        if (method_exists($data, $methodName)) {
-            $data->$methodName($value);
+        if ($useReflection) {
+            try {
+                $property = $this->getReflectionProperty($data, $name);
+                $property->setValue($data, $value);
+            } catch (Exception $exception) {
+                throw new ReflectionException('Could set property: reflection exception occured', 0, $exception);
+            }
         } else {
-            $data->$name = $value;
+            $methodName = 'set' . ucfirst($name);
+            if (method_exists($data, $methodName)) {
+                $data->$methodName($value);
+            } else {
+                $data->$name = $value;
+            }
         }
     }
 
     /**
      * Sets an array property
      * @param array $data
-     * @param unknown $name
-     * @param unknown $value
+     * @param string $name
+     * @param mixed $value
      * @throws ReflectionException
      */
     protected function setArrayProperty(array &$data, $name, $value) {
@@ -329,11 +365,12 @@ class ReflectionHelper implements Invoker {
      * Sets multiple properties to the provided data
      * @param array|object $data Data container
      * @param array $properties Array with the properties
+     * @param boolean $useReflection Set to true to skip setters
      * @return null
      */
-    public function setProperties(&$data, array $properties) {
+    public function setProperties(&$data, array $properties, $useReflection = false) {
         foreach ($properties as $name => $value) {
-            $this->setProperty($data, $name, $value);
+            $this->setProperty($data, $name, $value, $useReflection);
         }
     }
 
@@ -368,12 +405,12 @@ class ReflectionHelper implements Invoker {
      * instance of ReflectionParameter as value
      */
     public function getArguments($callback = null, $class = null) {
-        if (is_array($callback)) {
-            $callback = new Callback($callback);
-
+        if ($callback instanceof Callback) {
             $method = $callback->getMethod();
             $class = $callback->getClass();
-        } elseif ($callback instanceof Callback) {
+        } elseif (is_array($callback)) {
+            $callback = new Callback($callback);
+
             $method = $callback->getMethod();
             $class = $callback->getClass();
         } elseif ($class && $callback === null) {
@@ -387,7 +424,11 @@ class ReflectionHelper implements Invoker {
                 $reflectionFunction = new ReflectionFunction($method);
                 $arguments = $reflectionFunction->getParameters();
             } else {
-                $reflectionClass = new ReflectionClass($class);
+                if (!is_string($class)) {
+                    $class = get_class($class);
+                }
+
+                $reflectionClass = $this->getReflectionClass($class);
 
                 try {
                     $reflectionMethod = $reflectionClass->getMethod($method);
@@ -470,6 +511,43 @@ class ReflectionHelper implements Invoker {
         }
 
         return $callback->invokeWithArguments($callbackArguments);
+    }
+
+    /**
+     * Gets a reflection class
+     * @param string $class Name of the class
+     * @return \ReflectionClass
+     */
+    protected function getReflectionClass($class) {
+        if (isset($this->classes[$class])) {
+            return $this->classes[$class];
+        }
+
+        $reflectionClass = new ReflectionClass($class);
+
+        $this->classes[$class] = $reflectionClass;
+
+        return $reflectionClass;
+    }
+
+    /**
+     * Gets a reflection property
+     * @param mixed $instance Instance of the object
+     * @param string $name Name of the property
+     * @return \ReflectionProperty
+     */
+    protected function getReflectionProperty($instance, $name) {
+        $class = get_class($instance);
+        if (isset($this->properties[$class][$name])) {
+            return $this->properties[$class][$name];
+        }
+
+        $reflectionProperty = new ReflectionProperty($class, $name);
+        $reflectionProperty->setAccessible(true);
+
+        $this->properties[$class][$name] = $reflectionProperty;
+
+        return $reflectionProperty;
     }
 
 }
