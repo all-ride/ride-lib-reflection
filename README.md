@@ -30,7 +30,7 @@ $reflectionHelper = new ReflectionHelper();
 $date = $reflectionHelper->createObject('DateTime', array('time' => '6 July 1983'));
 
 // create an object for a specific interface
-$decorator = $reflectionHelper->createObject('ride\\library\\reflection\\ReflectionHelper', null, 'ride\\library\\reflection\\Invoker);
+$decorator = $reflectionHelper->createObject('ride\\library\\reflection\\ReflectionHelper', null, 'ride\\library\\reflection\\Invoker');
 
 // get and set properties
 $data = array();
