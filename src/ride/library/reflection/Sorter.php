@@ -54,6 +54,8 @@ class Sorter {
      * second data structure is greater and 0 when they are equal
      */
     protected function performCompare($data1, $data2) {
+        $result = 0;
+
         foreach ($this->sortProperties as $sortField => $sortDirection) {
             $value1 = $this->reflectionHelper->getProperty($data1, $sortField);
             $value2 = $this->reflectionHelper->getProperty($data2, $sortField);
@@ -63,13 +65,20 @@ class Sorter {
                     $result = 1;
                 } elseif ($value < $value2) {
                     $result = -1;
-                } else {
-                    $result = 0;
                 }
             } elseif ((is_string($value1) || is_object($value1)) && (is_string($value2) || is_object($value2))) {
                 $result = strcmp((string) $value1, (string) $value2);
-            } else {
-                $result = 0;
+                if ($result > 0) {
+                    $result = 1;
+                } elseif ($result < 0) {
+                    $result = -1;
+                }
+            } elseif (is_bool($value1) && is_bool($value2)) {
+                if ($value1 && !$value2) {
+                    $result = 1;
+                } elseif (!$value1 && $value2) {
+                    $result = -1;
+                }
             }
 
             if (!$sortDirection) {
