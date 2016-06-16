@@ -5,10 +5,7 @@ namespace ride\library\reflection;
 use \InvalidArgumentException;
 
 /**
- * Boolean library
- *
- * Based on CommandLine utility by Patrick Fisher <patrick@pwisher.com>
- * @see https://github.com/pwfisher/CommandLine.php
+ * Boolean helper
  */
 class Boolean {
 

@@ -40,7 +40,7 @@ class Sorter {
      */
     public function sort(array $data) {
         if ($this->sortProperties) {
-            usort($data, array($this, 'performCompare'));
+            uasort($data, array($this, 'performCompare'));
         }
 
         return $data;
@@ -63,7 +63,7 @@ class Sorter {
             if (is_numeric($value1) && is_numeric($value2)) {
                 if ($value1 > $value2) {
                     $result = 1;
-                } elseif ($value < $value2) {
+                } elseif ($value1 < $value2) {
                     $result = -1;
                 }
             } elseif ((is_string($value1) || is_object($value1)) && (is_string($value2) || is_object($value2))) {

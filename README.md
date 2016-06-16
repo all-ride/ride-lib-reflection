@@ -2,6 +2,19 @@
 
 Reflection helper library of the PHP Ride framework.
 
+## Boolean
+
+A helper to obtain a boolean value from various string formats:
+
+```php
+<?php
+
+use ride\library\reflection\Boolean;
+
+$bool = Boolean::getBoolean('yes'); // true
+$bool = Boolean::getBoolean('off'); // false
+```
+
 ## Invoker
 
 An interface to invoke dynamic callbacks.
@@ -67,8 +80,8 @@ $arguments = $reflectionHelper->getArguments('safeString', 'ride\library\String'
 $arguments = $reflectionHelper->getArguments('safeString', new ride\library\String());
 $arguments = $reflectionHelper->getArguments(array($data, 'safeString');
 // $arguments = array(
-//     'replacement' => ReflectionParamter[...],     
-//     'lower' => ReflectionParamter[...],
+//     'replacement' => ReflectionParameter[...],
+//     'lower' => ReflectionParameter[...],
 // );     
 
 // invoke a callback
@@ -79,4 +92,66 @@ $arguments = array(
 );
 
 $date = $reflectionHelper->invoke($callback, $arguments);
+```
+
+## Sorter
+
+Implementation to sort data containers, being arrays or objects, on different properties simultaneously.
+
+```
+<?php
+
+use ride\library\reflection\ReflectionHelper;
+use ride\library\reflection\Sorter;
+
+// generate some data containers
+$entry1 = array(
+    'name' => 'John',
+    'age' => 21,
+);
+$entry2 = array(
+    'name' => 'Jane',
+    'age' => 18,
+);
+$entry3 = array(
+    'name' => 'Mark',
+    'age' => 30,
+);
+$entry4 = array(
+    'name' => 'Tom',
+    'age' => 21,
+);
+
+$entries = array(
+    $entry1,
+    $entry2,
+    $entry3,
+    $entry4,
+);
+
+// create a sorter age ASC, name ASC
+$sorter = new Sorter(new ReflectionHelper(), array('age' => true, 'name' => true));
+
+// sort the entries
+print_r($sorter->sort($entries));
+/*
+array(
+    1 => array(
+        'name' => 'Jane',
+        'age' => 18,
+    ),
+    0 => array(
+        'name' => 'John',
+        'age' => 21,
+    ),
+    3 => array(
+        'name' => 'Tom',
+        'age' => 21,
+    ),
+    2 => array(
+        'name' => 'Mark',
+        'age' => 30,
+    ),
+);
+*/
 ```
