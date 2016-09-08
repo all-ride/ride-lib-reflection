@@ -2,7 +2,9 @@
 
 Reflection helper library of the PHP Ride framework.
 
-## Boolean
+## What's In This Library
+
+### Boolean
 
 A helper to obtain a boolean value from various string formats:
 
@@ -15,14 +17,14 @@ $bool = Boolean::getBoolean('yes'); // true
 $bool = Boolean::getBoolean('off'); // false
 ```
 
-## Invoker
+### Invoker
 
 An interface to invoke dynamic callbacks.
 It can be used by eg an event manager, a controller dispatcher, ...
 
 The ReflectionHelper class implements this interface to offer a generic implementation out of the box.
 
-## ReflectionHelper
+### ReflectionHelper
 
 The reflection helper offers an easy interface for dynamic programming:
 
@@ -94,7 +96,7 @@ $arguments = array(
 $date = $reflectionHelper->invoke($callback, $arguments);
 ```
 
-## Sorter
+### Sorter
 
 Implementation to sort data containers, being arrays or objects, on different properties simultaneously.
 
@@ -154,4 +156,12 @@ array(
     ),
 );
 */
+```
+
+## Installation
+
+You can use [Composer](http://getcomposer.org) to install this library.
+
+```
+composer require ride/lib-reflection
 ```
