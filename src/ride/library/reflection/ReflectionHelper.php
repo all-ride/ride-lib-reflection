@@ -207,11 +207,12 @@ class ReflectionHelper implements Invoker {
      * @return mixed Value of the property if found, null otherwise
      */
     public function getProperty(&$data, $name, $default = null, $useReflection = false) {
-        if (!is_string($name) || $name == '') {
+        $isArray = is_array($data);
+        if ($name == '' || (!is_string($name) && ($isArray && !is_numeric($name)))) {
             throw new ReflectionException('Could obtain property: invalid name provided');
         }
 
-        if (is_array($data)) {
+        if ($isArray) {
             return $this->getArrayProperty($data, $name, $default);
         }
 
@@ -296,11 +297,12 @@ class ReflectionHelper implements Invoker {
      * @return null
      */
     public function setProperty(&$data, $name, $value, $useReflection = false) {
-        if (!is_string($name) || $name == '') {
+        $isArray = is_array($data);
+        if ($name == '' || (!is_string($name) && ($isArray && !is_numeric($name)))) {
             throw new ReflectionException('Could obtain property: invalid name provided');
         }
 
-        if (is_array($data)) {
+        if ($isArray) {
             return $this->setArrayProperty($data, $name, $value);
         }
 
