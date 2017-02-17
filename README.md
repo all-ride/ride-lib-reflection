@@ -64,7 +64,7 @@ $result = $reflectionHelper->getProperty($data, 'sub[property]'); // 2
 $result = $reflectionHelper->getProperty($data, 'sub[unexistant]'); // null
 $result = $reflectionHelper->getProperty($data, 'sub[unexistant]', 'default'); // default
 
-// what if we work with objects     
+// what if we work with objects
 $data = new DateTime();
 
 // will call $data->setTimestamp('value');
@@ -84,7 +84,7 @@ $arguments = $reflectionHelper->getArguments(array($data, 'safeString');
 // $arguments = array(
 //     'replacement' => ReflectionParameter[...],
 //     'lower' => ReflectionParameter[...],
-// );     
+// );
 
 // invoke a callback
 $callback = array($reflectionHelper, 'createObject');

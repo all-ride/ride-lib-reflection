@@ -172,12 +172,16 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
             'sub' => array(
                 'sme' => $this->sme,
             ),
+            15 => $this->sme,
         );
 
         $result = $this->helper->getProperty($data, 'sme');
         $this->assertTrue($result === 7);
 
         $result = $this->helper->getProperty($data, 'sub[sme]');
+        $this->assertTrue($result === 7);
+
+        $result = $this->helper->getProperty($data, 15);
         $this->assertTrue($result === 7);
     }
 
@@ -253,15 +257,18 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
         $this->assertTrue(isset($this->$property));
         $this->assertTrue($this->$property === $value);
 
+        // to array
         $data = array('sub' => array('value' => $value));
 
         $this->helper->setProperty($data, 'dummy', $value);
         $this->helper->setProperty($data, 'dummy2[sub]', $value);
         $this->helper->setProperty($data, 'sub[sub2][sub3]', $value);
+        $this->helper->setProperty($data, 78, $value);
 
         $this->assertTrue($data['dummy'] === $value);
         $this->assertTrue($data['dummy2']['sub'] === $value);
         $this->assertTrue($data['sub']['sub2']['sub3'] === $value);
+        $this->assertTrue($data[78] === $value);
     }
 
     /**
