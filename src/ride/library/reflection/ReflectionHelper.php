@@ -27,6 +27,22 @@ class ReflectionHelper implements Invoker {
     private $properties = array();
 
     /**
+     * Returns the fields to serialize
+     * @return array Array with field names
+     */
+    public function __sleep() {
+        return array();
+    }
+
+    /**
+     * Reinitializes this field after sleeping
+     * @return null
+     */
+    public function __wakeup() {
+
+    }
+
+    /**
      * Checks if the provided class extends or implements the provided interface
      * @param mixed $class Class name, instance or a reflection class to test
      * @param string $neededInterface Class name of the needed interface

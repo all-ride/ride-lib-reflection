@@ -1,3 +1,7 @@
+# [1.0.3] - 2020-03-12
+## Updated
+- php 7.4 compatibility
+
 # [1.0.2] - 2017-02-17
 ## Updated
 - allow numeric properties for array data
