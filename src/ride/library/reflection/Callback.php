@@ -158,7 +158,7 @@ class Callback {
             throw new ReflectionException('Could not invoke ' . $this . ': callback is not callable');
         }
 
-        return call_user_func_array($this->callback, $arguments);
+        return call_user_func_array($this->callback, array_values($arguments));
     }
 
 }

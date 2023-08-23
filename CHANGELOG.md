@@ -1,3 +1,6 @@
+# [1.1.0] - 2023-06-05
+## Updated
+- php 8.1 compatibility
 # [1.0.3] - 2020-03-12
 ## Updated
 - php 7.4 compatibility
