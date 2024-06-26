@@ -14,6 +14,8 @@ class ReflectionHelperTest extends PHPUnit_Framework_TestCase {
     public $sme = 7;
 
     private $pla = 5;
+    private $value;
+    private array $invokedArguments;
 
     protected function setUp() {
         $this->helper = new ReflectionHelper();

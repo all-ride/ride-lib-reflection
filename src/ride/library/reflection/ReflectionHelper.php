@@ -460,7 +460,8 @@ class ReflectionHelper implements Invoker {
                 }
             }
         } catch (Exception $exception) {
-            throw new ReflectionException('Could not get the arguments for method ' . $method . ($class ? ' in ' . (!is_string($class) ? get_class($class) : $class) : ''), null, $exception);
+            throw $exception;
+            throw new ReflectionException('Could not get the arguments for method ' . $method . ($class ? ' in ' . (!is_string($class) ? get_class($class) : $class) : ''), 0, $exception);
         }
 
         foreach ($arguments as $index => $argument) {
